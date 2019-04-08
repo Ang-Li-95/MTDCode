@@ -30,6 +30,7 @@ parser.add_argument('--output',dest='output')
 parser.add_argument('--layout',dest='layout')
 parser.add_argument('--chi2cut',dest='chi2cut')
 parser.add_argument('--events',dest='events',default='-1')
+parser.add_argument('--firstEvent',dest='firstEvent', default='0')
 parser.add_argument('--dumpHits',dest='dumpHits',action='store_true',default=False)
 parser.add_argument('--dumpAll',dest='dumpAll',action='store_true',default=False)
 
@@ -73,13 +74,13 @@ histos["track_eta_lowPt"]=R.TH1F("track_eta_lowPt","track_eta_lowPt",100,0.,3,)
 histos["track_phi"]=R.TH1F("track_phi","track_phi",1000,-M.pi,M.pi)
 #histos["track_eta_1"]=R.TH1F("track_eta_1","track_eta_1",100,0.,3,)
 histos["track_eta_sel"]=R.TH1F("track_eta_sel","track_eta_sel",100,0.,3,)
-histos["track_phi_sel"]=R.TH1F("track_phi_sel","track_phi_sel",1000,-M.pi,M.pi)
+histos["track_phi_sel"]=R.TH1F("track_phi_sel","track_phi_sel",108,-M.pi,M.pi)
 histos["eff_eta"]=R.TH1F("eff_eta","eff_eta",100,0.,3,)
 histos["eff_phi"]=R.TH1F("eff_phi","eff_phi",1000,-M.pi,M.pi)
 histos["recHits_eta_ETL"]=R.TH1F("recHits_eta_ETL","recHits_eta_ETL",100,0.,3,)
 histos["recHits_phi_ETL"]=R.TH1F("recHits_phi_ETL","recHits_phi_ETL",1000,-M.pi,M.pi)
 histos["recHits_eta_ETL_sel"]=R.TH1F("recHits_eta_ETL_sel","recHits_eta_ETL_sel",100,0.,3,)
-histos["recHits_phi_ETL_sel"]=R.TH1F("recHits_phi_ETL_sel","recHits_phi_ETL_sel",1000,-M.pi,M.pi)
+histos["recHits_phi_ETL_sel"]=R.TH1F("recHits_phi_ETL_sel","recHits_phi_ETL_sel",108,-M.pi,M.pi)
 histos["occupancy_eta_ETL"]=R.TH1F("occupancy_eta_ETL","occupancy_eta_ETL",100,0.,3,)
 histos["occupancy_phi_ETL"]=R.TH1F("occupancy_phi_ETL","occupancy_phi_ETL",1000,-M.pi,M.pi)
 
@@ -95,12 +96,24 @@ histos["BTLrecHits_eta_sel"]=R.TH1F("BTLrecHits_eta_sel","BTLrecHits_eta_sel",20
 for det in ["BTL","ETL"]:
     histos[det+"track_pt"]= R.TH1F (det+"track_pt" ,det+"track_pt",100,0.,10.)
     histos[det+"track_eta"]=R.TH1F(det+"track_eta",det+"track_eta",100,0.,3,)
-    histos[det+"track_eta_1"]=R.TH1F(det+"track_eta_1",det+"track_eta_1",100,0.,3,)
+    histos[det+"track_eta_1"]=R.TH1F(det+"track_eta_1",det+"track_eta_1",300,0.,3,)
     histos[det+"track_eta_lowPt"]=R.TH1F(det+"track_eta_lowPt",det+"track_eta_lowPt",100,0.,3,)
     histos[det+"track_phi"]=R.TH1F(det+"track_phi",det+"track_phi",2000,0.,M.pi)
-    histos[det+"track_phi_1"]=R.TH1F(det+"track_phi_1",det+"track_phi_1",2000,0.,M.pi)
-    histos[det+"track_eta_sel"]=R.TH1F(det+"track_eta_sel",det+"track_eta_sel",100,0.,3,)
-    histos[det+"track_phi_sel"]=R.TH1F(det+"track_phi_sel",det+"track_phi_sel",2000,0.,M.pi)
+    histos[det+"track_phi_1"]=R.TH1F(det+"track_phi_1",det+"track_phi_1",252,-M.pi,M.pi)
+    histos[det+"track_eta_sel"]=R.TH1F(det+"track_eta_sel",det+"track_eta_sel",300,0.,3,)
+    histos[det+"track_phi_sel"]=R.TH1F(det+"track_phi_sel",det+"track_phi_sel",252,-M.pi,M.pi)
+    histos[det+"track_pt_denominator"]=R.TH1F(det+"track_pt_denominator",det+"track_pt_denominator",120,0.,12.)
+    histos[det+"track_pt_numerator"]=R.TH1F(det+"track_pt_numerator",det+"track_pt_numerator",120,0.,12.)
+
+    histos[det+"track_eta_vs_pt_denominator"]=R.TH2F(det+"track_eta_vs_pt_denominator",det+"track_eta_vs_pt_denominator",100,0.,15,30,0.,3)
+    histos[det+"track_eta_vs_pt_numerator"]=R.TH2F(det+"track_eta_vs_pt_numerator",det+"track_eta_vs_pt_numerator",100,0.,15,30,0.,3)
+    histos[det+"track_eta_vs_phi_denominator"]=R.TH2F(det+"track_eta_vs_phi_denominator",det+"track_eta_vs_phi_denominator",108,-M.pi,M.pi,30,0.,3)
+    histos[det+"track_eta_vs_phi_numerator"]=R.TH2F(det+"track_eta_vs_phi_numerator",det+"track_eta_vs_phi_numerator",108,-M.pi,M.pi,30,0.,3)
+    histos[det+"track_eta_vs_phi_denominator_recHits"]=R.TH2F(det+"track_eta_vs_phi_denominator_recHits",det+"track_eta_vs_phi_denominator_recHits",108,-M.pi,M.pi,30,0.,3)
+    histos[det+"track_eta_vs_phi_numerator_recHits"]=R.TH2F(det+"track_eta_vs_phi_numerator_recHits",det+"track_eta_vs_phi_numerator_recHits",108,-M.pi,M.pi,30,0.,3)
+    histos[det+"recHits_eff_phi_denominator"]=R.TH1F(det+"recHits_eff_phi_denominator",det+"recHits_eff_phi_denominator",1440,-M.pi,M.pi)
+    histos[det+"recHits_eff_phi_numerator"]=R.TH1F(det+"recHits_eff_phi_numerator",det+"recHits_eff_phi_numerator",1440,-M.pi,M.pi)
+
     
     #histos[det+"eff_eta"]=R.TH1F(det+"eff_eta",det+"eff_eta",100,0.,3,)
     #histos[det+"eff_phi"]=R.TH1F(det+"eff_phi",det+"eff_phi",2000,-M.pi,M.pi)
@@ -158,9 +171,23 @@ for ievent,event in enumerate(dh):
 
     #dr_cut = 0.05
     #recHit_threshold=0.01
+    havepassedtrack = False
+    for itrack in range(0,len(event.track_idx)):
+        if (event.track_pt[itrack]>2):
+            havepassedtrack = True
+
+
+    if(not havepassedtrack):
+        continue
+        
     
     for iRecHit in range(0,event.recHits_n):
+        if(event.recHits_det[iRecHit]==1):  
+            histos["BTLtrack_eta_vs_phi_denominator_recHits"].Fill(event.recHits_phi[iRecHit],abs(event.recHits_eta[iRecHit]))
+            histos["BTLrecHits_eff_phi_denominator"].Fill(event.recHits_phi[iRecHit])
         if(event.recHits_det[iRecHit]==2):  #only keep recHits in ETL
+            histos["ETLtrack_eta_vs_phi_denominator_recHits"].Fill(event.recHits_phi[iRecHit],abs(event.recHits_eta[iRecHit]))
+            histos["ETLrecHits_eff_phi_denominator"].Fill(event.recHits_phi[iRecHit])
             histos["ETLrecHits_eta_h"].Fill(event.recHits_eta[iRecHit])
             histos["h_ETL_recHits_energy"].Fill(event.recHits_energy[iRecHit])
 	        #histos["recHits_eta_ETL"].Fill(event.recHits_eta[iRecHit])
@@ -179,6 +206,7 @@ for ievent,event in enumerate(dh):
         #    histos["recHits_phi_ETL_sel"].Fill(event.recHits_eta[iRecHit])
     Num_Events+=1
 
+    
 
     for itrack in range(0,len(event.track_idx)):
         recHit_energy_totalval_BTL = 0   #the total value of recHit energy from BTL
@@ -186,6 +214,7 @@ for ievent,event in enumerate(dh):
         n_recHits_BTL = 0
         n_recHits_ETL = 0
 
+        #isNuGun = True if args.inputDir.find("NuGun")>0 else False
         isNuGun = True if args.input.find("NuGun")>0 else False
         if (not goodTrack(event,itrack,args.chi2cut,isNuGun)):
             continue
@@ -196,27 +225,64 @@ for ievent,event in enumerate(dh):
                 if (event.recHits_det[irecHit]==1 and dR<0.05):
                     recHit_energy_totalval_BTL+=event.recHits_energy[irecHit]
                     n_recHits_BTL+=1                   
+                    
                     #print "For BTL and %d th track, energy: %f" % (itrack,event.recHits_energy[irecHit])
             
             histos["BTLrecHit_energy_h"].Fill(recHit_energy_totalval_BTL)
             histos["BTLtrack_eta_1"].Fill(abs(event.track_eta_atBTL[itrack]))
             histos["BTLtrack_phi_1"].Fill(event.track_phi_atBTL[itrack])
-            if(recHit_energy_totalval_BTL>0):
+            histos["BTLtrack_pt_denominator"].Fill(event.track_pt[itrack])
+            histos["BTLtrack_eta_vs_pt_denominator"].Fill(event.track_pt[itrack],abs(event.track_eta_atBTL[itrack]))
+            histos["BTLtrack_eta_vs_phi_denominator"].Fill(event.track_phi_atBTL[itrack],abs(event.track_eta_atBTL[itrack]))
+
+            if(recHit_energy_totalval_BTL>3.):
+                histos["BTLtrack_pt_numerator"].Fill(event.track_pt[itrack])
                 histos["BTLtrack_eta_sel"].Fill(abs(event.track_eta_atBTL[itrack]))
                 histos["BTLtrack_phi_sel"].Fill(event.track_phi_atBTL[itrack])
+                histos["BTLtrack_eta_vs_pt_numerator"].Fill(event.track_pt[itrack],abs(event.track_eta_atBTL[itrack]))
+                if(event.track_pt[itrack]>2):
+                    #print "pT at BTL= %f"%event.track_pt[itrack]
+                    histos["BTLtrack_eta_vs_phi_numerator"].Fill(event.track_phi_atBTL[itrack],abs(event.track_eta_atBTL[itrack]))
+                    for nRecHits in range(0,event.recHits_n):
+                        dR = M.sqrt(pow((event.track_eta_atBTL[itrack]-event.recHits_eta[nRecHits]),2)+pow(event.track_phi_atBTL[itrack]-event.recHits_phi[nRecHits],2))
+                        if(event.recHits_det[nRecHits]==1 and dR<0.05):
+                            histos["BTLtrack_eta_vs_phi_numerator_recHits"].Fill(event.recHits_phi[nRecHits],abs(event.recHits_eta[nRecHits]))
+                            histos["BTLrecHits_eff_phi_numerator"].Fill(event.recHits_phi[nRecHits])
+
+                        
+
+
             
-        elif(event.track_eta_atETL[itrack]>-100. and abs(event.track_eta[itrack])>1.5 and abs(event.track_eta[itrack])<3.0):
+        if(event.track_eta_atETL[itrack]>-100. and abs(event.track_eta[itrack])>1.5 and abs(event.track_eta[itrack])<3.0):
             for irecHit in range(0,event.recHits_n):   #loop over all recHits
-                if (event.recHits_det[irecHit]==2 and M.sqrt(pow((event.track_eta_atETL[itrack]-event.recHits_eta[irecHit]),2)+pow(event.track_phi_atETL[itrack]-event.recHits_phi[irecHit],2))<0.05):
+                dRE = M.sqrt(pow((event.track_eta_atETL[itrack]-event.recHits_eta[irecHit]),2)+pow(event.track_phi_atETL[itrack]-event.recHits_phi[irecHit],2))
+                if (event.recHits_det[irecHit]==2 and dRE<0.05):
                     recHit_energy_totalval_ETL+=event.recHits_energy[irecHit]
                     n_recHits_ETL+=1
                     #print "For ETL and %d th track, energy: %f" % (itrack,event.recHits_energy[irecHit])
             histos["ETLrecHit_energy_h"].Fill(recHit_energy_totalval_ETL)
             histos["ETLtrack_eta_1"].Fill(abs(event.track_eta_atETL[itrack]))
             histos["ETLtrack_phi_1"].Fill(event.track_phi_atETL[itrack])
+            histos["ETLtrack_pt_denominator"].Fill(event.track_pt[itrack])
+            histos["ETLtrack_eta_vs_pt_denominator"].Fill(event.track_pt[itrack],abs(event.track_eta_atETL[itrack]))
+            histos["ETLtrack_eta_vs_phi_denominator"].Fill(event.track_phi_atETL[itrack],abs(event.track_eta_atETL[itrack]))
+
             if(recHit_energy_totalval_ETL>0.015):
+                histos["ETLtrack_pt_numerator"].Fill(event.track_pt[itrack])
                 histos["ETLtrack_eta_sel"].Fill(abs(event.track_eta_atETL[itrack]))
                 histos["ETLtrack_phi_sel"].Fill(event.track_phi_atETL[itrack])
+                histos["ETLtrack_eta_vs_pt_numerator"].Fill(event.track_pt[itrack],abs(event.track_eta_atETL[itrack]))
+                if(event.track_pt[itrack]>2):
+                    histos["ETLtrack_eta_vs_phi_numerator"].Fill(event.track_phi_atETL[itrack],abs(event.track_eta_atETL[itrack]))
+                    for nRecHits in range(0,event.recHits_n):
+                        dR = M.sqrt(pow((event.track_eta_atETL[itrack]-event.recHits_eta[nRecHits]),2)+pow(event.track_phi_atETL[itrack]-event.recHits_phi[nRecHits],2))
+                        if(event.recHits_det[nRecHits]==2 and dR<0.05):
+                            histos["ETLtrack_eta_vs_phi_numerator_recHits"].Fill(event.recHits_phi[nRecHits],abs(event.recHits_eta[nRecHits]))
+                            histos["ETLrecHits_eff_phi_numerator"].Fill(event.recHits_phi[nRecHits])
+
+
+                        
+
             
         histos["track_pt"].Fill(event.track_pt[itrack])
         histos["track_eta"].Fill(abs(event.track_eta[itrack]))
@@ -260,8 +326,10 @@ histos["BTLeff_phi"]=R.TGraphAsymmErrors(histos["BTLtrack_phi_sel"],histos["BTLt
 histos["ETLeff_eta"]=R.TGraphAsymmErrors(histos["ETLtrack_eta_sel"],histos["ETLtrack_eta_1"])
 histos["ETLeff_phi"]=R.TGraphAsymmErrors(histos["ETLtrack_phi_sel"],histos["ETLtrack_phi_1"])
 
-#histos["ETLefficiency_eta"]=R.TGraphAsymmErrors(histos["ETLrecHits_eta_sel"],histos["ETLrecHits_eta_h"])
-#histos["BTLefficiency_eta"]=R.TGraphAsymmErrors(histos["BTLrecHits_eta_sel"],histos["BTLrecHits_eta_h"])
+histos["BTLeff_pt"]=R.TGraphAsymmErrors(histos["BTLtrack_pt_numerator"],histos["BTLtrack_pt_denominator"])
+
+histos["ETLefficiency_phi"]=R.TGraphAsymmErrors(histos["ETLrecHits_eff_phi_numerator"],histos["ETLrecHits_eff_phi_denominator"])
+histos["BTLefficiency_phi"]=R.TGraphAsymmErrors(histos["BTLrecHits_eff_phi_numerator"],histos["BTLrecHits_eff_phi_denominator"])
 
 
 
