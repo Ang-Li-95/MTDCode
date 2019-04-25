@@ -16,6 +16,16 @@ def goodTrack(evt, itrack , chi2cut, skipMCmatching):
         return False
     if (abs(evt.track_pt[itrack]/evt.track_mcMatch_genPt[itrack]-1.)>0.1 and not skipMCmatching):
         return False
+    '''
+    if (evt.track_pt[itrack]<9.8):
+	return False
+    if (evt.track_pt[itrack]>10.2):
+        return False
+    if (abs(evt.track_eta_atBTL[itrack])<0.8):
+        return False
+    if (abs(evt.track_eta_atBTL[itrack])>1.0):
+        return False
+    '''
 #    if (evt.track_normalizedChi2[itrack] > chi2cut):
 #        return False
 #    if (evt.track_eta_atBTL[itrack]<-100 and evt.track_eta_atETL[itrack]<-100):
@@ -90,20 +100,20 @@ histos["occupancy_phi_ETL"]=R.TH1F("occupancy_phi_ETL","occupancy_phi_ETL",1000,
 #histos["h_recHit_energy"]=R.TH1F("h_recHit_energy","h_recHit_energy")
 histos["ETLrecHits_eta_h"]=R.TH1F("ETLrecHits_eta_h","ETLrecHits_eta_h",100,1.5,3,)
 histos["ETLrecHits_eta_sel"]=R.TH1F("ETLrecHits_eta_sel","ETLrecHits_eta_sel",100,1.5,3,)
-histos["BTLrecHits_eta_h"]=R.TH1F("BTLrecHits_eta_h","BTLrecHits_eta_h",200,0.,1.5,)
-histos["BTLrecHits_eta_sel"]=R.TH1F("BTLrecHits_eta_sel","BTLrecHits_eta_sel",200,0.,1.5,)
+histos["BTLrecHits_eta_h"]=R.TH1F("BTLrecHits_eta_h","BTLrecHits_eta_h",1148,0.,1.5,)
+histos["BTLrecHits_eta_sel"]=R.TH1F("BTLrecHits_eta_sel","BTLrecHits_eta_sel",1148,0.,1.5,)
 
 for det in ["BTL","ETL"]:
     histos[det+"track_pt"]= R.TH1F (det+"track_pt" ,det+"track_pt",100,0.,10.)
     histos[det+"track_eta"]=R.TH1F(det+"track_eta",det+"track_eta",100,0.,3,)
-    histos[det+"track_eta_1"]=R.TH1F(det+"track_eta_1",det+"track_eta_1",300,0.,3,)
+    histos[det+"track_eta_1"]=R.TH1F(det+"track_eta_1",det+"track_eta_1",150,0.,3,)
     histos[det+"track_eta_lowPt"]=R.TH1F(det+"track_eta_lowPt",det+"track_eta_lowPt",100,0.,3,)
     histos[det+"track_phi"]=R.TH1F(det+"track_phi",det+"track_phi",2000,0.,M.pi)
-    histos[det+"track_phi_1"]=R.TH1F(det+"track_phi_1",det+"track_phi_1",252,-M.pi,M.pi)
-    histos[det+"track_eta_sel"]=R.TH1F(det+"track_eta_sel",det+"track_eta_sel",300,0.,3,)
-    histos[det+"track_phi_sel"]=R.TH1F(det+"track_phi_sel",det+"track_phi_sel",252,-M.pi,M.pi)
-    histos[det+"track_pt_denominator"]=R.TH1F(det+"track_pt_denominator",det+"track_pt_denominator",120,0.,12.)
-    histos[det+"track_pt_numerator"]=R.TH1F(det+"track_pt_numerator",det+"track_pt_numerator",120,0.,12.)
+    histos[det+"track_phi_1"]=R.TH1F(det+"track_phi_1",det+"track_phi_1",108,-M.pi,M.pi)
+    histos[det+"track_eta_sel"]=R.TH1F(det+"track_eta_sel",det+"track_eta_sel",150,0.,3,)
+    histos[det+"track_phi_sel"]=R.TH1F(det+"track_phi_sel",det+"track_phi_sel",108,-M.pi,M.pi)
+    histos[det+"track_pt_denominator"]=R.TH1F(det+"track_pt_denominator",det+"track_pt_denominator",150,0.,15.)
+    histos[det+"track_pt_numerator"]=R.TH1F(det+"track_pt_numerator",det+"track_pt_numerator",150,0.,15.)
 
     histos[det+"track_eta_vs_pt_denominator"]=R.TH2F(det+"track_eta_vs_pt_denominator",det+"track_eta_vs_pt_denominator",100,0.,15,30,0.,3)
     histos[det+"track_eta_vs_pt_numerator"]=R.TH2F(det+"track_eta_vs_pt_numerator",det+"track_eta_vs_pt_numerator",100,0.,15,30,0.,3)
@@ -124,7 +134,14 @@ for det in ["BTL","ETL"]:
     histos[det+"recHit_time"]=R.TH1F(det+"recHit_time",det+"recHit_time",100,0.,25.)
     histos[det+"recHit_energy_h"]=R.TH1F(det+"recHit_energy_h",det+"recHit_energy_h",100,0.,1.5)
 
-  
+histos["BTLrecHits_length1_minus_length2"]=R.TH1F("BTLrecHits_length1_minus_length2","BTLrecHits_length1_minus_length2",50,-0.5,0.5)
+histos["BTLrecHits_total_length"]=R.TH1F("BTLrecHits_total_length","BTLrecHits_total_length",75,-0.5,1)
+histos["BTLrecHits_length_1"]=R.TH1F("BTLrecHits_length_1","BTLrecHits_length_1",50,-0.5,0.5)
+histos["BTLrecHits_length_2"]=R.TH1F("BTLrecHits_length_2","BTLrecHits_length_2",50,-0.5,0.5)  
+histos["BTLrecHits_t1_travel_vs_t2_travel"]=R.TH2F("BTLrecHits_t1_travel_vs_t2_travel","BTLrecHits_t1_travel_vs_t2_travel",50,-2.,3.,50,-2.,3.)
+histos["BTLrecHits_x1_vs_x2"]=R.TH2F("BTLrecHits_x1_vs_x2","BTLrecHits_x1_vs_x2",50,-0.5,0.5,50,-0.5,0.5)
+histos["BTLrecHits_average_time"]=R.TH2F("BTLrecHits_average_time","BTLrecHits_average_time",300,0,60,300,0,60)
+
 histos["h_ETL_ring"]=R.TH1F("h_ETL_ring","h_ETL_ring",50,0,50)
 histos["h_ETL_recHits_energy"]=R.TH1F("h_ETL_recHits_energy","h_ETL_recHits_energy",1000,0.,10)
 for iRing in range(1,12):
@@ -171,6 +188,7 @@ for ievent,event in enumerate(dh):
 
     #dr_cut = 0.05
     #recHit_threshold=0.01
+    '''
     havepassedtrack = False
     for itrack in range(0,len(event.track_idx)):
         if (event.track_pt[itrack]>2):
@@ -179,11 +197,20 @@ for ievent,event in enumerate(dh):
 
     if(not havepassedtrack):
         continue
-        
-    
+    '''    
+    speed_of_light = 0.16472113 #in units of 1e+09		unit of time is ps(1e-12s)
+    c = 0.299792458			#in units of 1e+09
+    radius_of_BTL = 1.148
+
     for iRecHit in range(0,event.recHits_n):
-        if(event.recHits_det[iRecHit]==1):  
-            histos["BTLtrack_eta_vs_phi_denominator_recHits"].Fill(event.recHits_phi[iRecHit],abs(event.recHits_eta[iRecHit]))
+        #print "for recHit %d, eta: %f	phi: %f	uncal_eta: %f	uncal_phi: %f" % (iRecHit,event.recHits_eta[iRecHit],event.recHits_phi[iRecHit],event.recHits_eta_uncalibrated[iRecHit],event.recHits_phi_uncalibrated[iRecHit])
+	if(event.recHits_det[iRecHit]==1):
+	    #histos["BTLrecHits_t1_minus_t2"].Fill(event.recHits_uncal_time1[iRecHit]-event.recHits_uncal_time2[iRecHit])  
+            #histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iRecHit]+event.recHits_uncal_time2[iRecHit]))
+	    #histos["BTLrecHits_length_1"].Fill(speed_of_light*event.recHits_uncal_time1[iRecHit])
+	    #histos["BTLrecHits_length_2"].Fill(speed_of_light*event.recHits_uncal_time2[iRecHit])
+	    histos["BTLrecHits_eta_h"].Fill(event.recHits_eta[iRecHit])
+	    histos["BTLtrack_eta_vs_phi_denominator_recHits"].Fill(event.recHits_phi[iRecHit],abs(event.recHits_eta[iRecHit]))
             histos["BTLrecHits_eff_phi_denominator"].Fill(event.recHits_phi[iRecHit])
         if(event.recHits_det[iRecHit]==2):  #only keep recHits in ETL
             histos["ETLtrack_eta_vs_phi_denominator_recHits"].Fill(event.recHits_phi[iRecHit],abs(event.recHits_eta[iRecHit]))
@@ -206,7 +233,55 @@ for ievent,event in enumerate(dh):
         #    histos["recHits_phi_ETL_sel"].Fill(event.recHits_eta[iRecHit])
     Num_Events+=1
 
-    
+
+    for nRecHit in range(0,len(event.recHits_eta_uncalibrated)):
+        recHitMatched = False
+	if(event.recHits_matched_with_uncalibrated[nRecHit]==0):
+		continue
+        for iTrack in range(0,len(event.track_idx)):
+                isNuGun_uncal_ = True if args.inputDir.find("NuGun")>0 else False
+                if(not goodTrack(event,iTrack,args.chi2cut,isNuGun_uncal_)):
+                        continue
+                if(not event.track_eta_atBTL[iTrack]>-100.):
+                        continue
+                deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_eta[nRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_phi[nRecHit],2))
+                if(deltaR<0.05):
+                        recHitMatched = True
+                        break
+        if(not (recHitMatched == True)):
+                continue
+	histos["BTLrecHits_average_time"].Fill(event.recHits_time[nRecHit],(event.recHits_time1_uncalibrated[nRecHit]+event.recHits_time2_uncalibrated[nRecHit])/2)
+
+
+
+
+
+    for iuncalRecHit in range(0,len(event.recHits_uncal_time1)):
+	recHitMatched = False
+	for iTrack in range(0,len(event.track_idx)):
+		isNuGun_uncal = True if args.inputDir.find("NuGun")>0 else False
+		if(not goodTrack(event,iTrack,args.chi2cut,isNuGun_uncal)):
+			continue
+		if(not event.track_eta_atBTL[iTrack]>-100.):
+			continue
+		deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_uncal_eta[iuncalRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_uncal_phi[iuncalRecHit],2))   
+		if(deltaR<0.05):
+			recHitMatched = True
+			break
+	if(not (recHitMatched == True)):
+		continue
+	#calculate the time it takes for the track to reach BTL
+	#assuming the speed is c and no curved track because of high energy
+	angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
+	distance_travelled = radius_of_BTL/M.cos(angle)
+	t_travel = distance_travelled/c
+	histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
+        histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travel))
+        histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
+        histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel))
+	histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travel,event.recHits_uncal_time1[iuncalRecHit]-t_travel)
+	histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
+
 
     for itrack in range(0,len(event.track_idx)):
         recHit_energy_totalval_BTL = 0   #the total value of recHit energy from BTL
@@ -214,8 +289,8 @@ for ievent,event in enumerate(dh):
         n_recHits_BTL = 0
         n_recHits_ETL = 0
 
-        #isNuGun = True if args.inputDir.find("NuGun")>0 else False
-        isNuGun = True if args.input.find("NuGun")>0 else False
+        isNuGun = True if args.inputDir.find("NuGun")>0 else False
+        #isNuGun = True if args.input.find("NuGun")>0 else False
         if (not goodTrack(event,itrack,args.chi2cut,isNuGun)):
             continue
         if (event.track_eta_atBTL[itrack]>-100.):  #if the track is from BTL
@@ -240,6 +315,7 @@ for ievent,event in enumerate(dh):
                 histos["BTLtrack_eta_sel"].Fill(abs(event.track_eta_atBTL[itrack]))
                 histos["BTLtrack_phi_sel"].Fill(event.track_phi_atBTL[itrack])
                 histos["BTLtrack_eta_vs_pt_numerator"].Fill(event.track_pt[itrack],abs(event.track_eta_atBTL[itrack]))
+		    
                 if(event.track_pt[itrack]>2):
                     #print "pT at BTL= %f"%event.track_pt[itrack]
                     histos["BTLtrack_eta_vs_phi_numerator"].Fill(event.track_phi_atBTL[itrack],abs(event.track_eta_atBTL[itrack]))

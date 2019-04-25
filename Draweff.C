@@ -6,8 +6,8 @@ using namespace std;
 void Draweff()
 {
     gStyle->SetOptStat(0);
-    TString input_singlemu_barz="nuGun200PU_v1_0404.root";
-    TString input_singlemu_barphi="singlemu_D39_100k_0405_1.root";
+    TString input_singlemu_barz="singlemu_100k_D35_0409_1.root";
+    TString input_singlemu_barphi="singlemu_D39_100k_0409_1.root";
     TFile *f_z = new TFile(input_singlemu_barz);
     TFile *f_phi = new TFile(input_singlemu_barphi);
 
@@ -49,13 +49,13 @@ void Draweff()
     //h_eff_z->Draw();
     //h->GetXaxis()->SetLimits(5.,11.);
     h1->Draw();
-    h_eff_z->Draw("same");
-    h_eff_phi->Draw("same");
+    h_eff_z->Draw("Psame");
+    //h_eff_phi->Draw("same");
     TLegend* leg = new TLegend(0.1,0.1,0.25,0.2);
     gStyle->SetLegendBorderSize(0);
     leg->AddEntry(h_eff_z,"bars in z");
     leg->AddEntry(h_eff_phi,"bars in phi");
-    leg->Draw();
+    //leg->Draw();
 
     c1->Update();
     eff = (h_pt_z_sel->GetEntries())/(h_pt_z->GetEntries());
@@ -77,13 +77,13 @@ void Draweff()
     //h->GetXaxis()->SetLimits(0.,3.);
     h2->Draw();
     h2->GetXaxis()->SetRangeUser(0,1.5);
-    h_eff_eta_z->Draw("same");
-    h_eff_eta_phi->Draw("same");
+    h_eff_eta_z->Draw("P SAME");
+    //h_eff_eta_phi->Draw("same");
     TLegend* leg2 = new TLegend(0.1,0.1,0.25,0.2);
     gStyle->SetLegendBorderSize(0);
     leg2->AddEntry(h_eff_eta_z,"bars in z");
     leg2->AddEntry(h_eff_eta_phi,"bars in phi");
-    leg2->Draw();
+    //leg2->Draw();
 
     c2->Update();
 
@@ -104,13 +104,13 @@ void Draweff()
     //h_eff_z->Draw();
     h3->GetXaxis()->SetLimits(0.,11.);
     h3->Draw();
-    h_eff_pt_z->Draw("same");
-    h_eff_pt_phi->Draw("same");
+    h_eff_pt_z->Draw("Psame");
+    //h_eff_pt_phi->Draw("APsame");
     TLegend* leg3 = new TLegend(0.1,0.1,0.25,0.2);
     gStyle->SetLegendBorderSize(0);
     leg3->AddEntry(h_eff_pt_z,"bars in z");
     leg3->AddEntry(h_eff_pt_phi,"bars in phi");
-    leg3->Draw();
+    //leg3->Draw();
 
     c3->Update();
 
