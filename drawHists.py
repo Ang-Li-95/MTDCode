@@ -7,7 +7,7 @@ import os
 
 def goodTrack(evt, itrack , chi2cut, skipMCmatching):
     #acceptance cuts
-    if (evt.track_pt[itrack]<3.0):
+    if (evt.track_pt[itrack]<0.7):
         return False
     if (abs(evt.track_eta[itrack])>3.):
         return False
@@ -274,17 +274,21 @@ for ievent,event in enumerate(dh):
 		if(event.track_velocity[iTrack]==0):
 			continue
 		deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_uncal_eta[iuncalRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_uncal_phi[iuncalRecHit],2))   
-		if(deltaR<0.01):
+		if(deltaR<0.05):
 			distance_ref_to_recHit = M.sqrt((event.recHits_uncal_x[iuncalRecHit]-event.track_x[iTrack])*(event.recHits_uncal_x[iuncalRecHit]-event.track_x[iTrack])+(event.recHits_uncal_y[iuncalRecHit]-event.track_y[iTrack])*(event.recHits_uncal_y[iuncalRecHit]-event.track_y[iTrack])+(event.recHits_uncal_z[iuncalRecHit]-event.track_z[iTrack])*(event.recHits_uncal_z[iuncalRecHit]-event.track_z[iTrack]))
-			t_travelled = distance_ref_to_recHit*0.01/(event.track_velocity[iTrack]*c)-event.track_t[iTrack]
+			t_travelled = distance_ref_to_recHit*0.01/(event.track_velocity[iTrack]*c)+event.track_t[iTrack]
 			print "Before: %f cm" %distance_travelled
 			print "After: %f cm" %distance_ref_to_recHit
+			print "reference point(%f,%f,%f)" %(event.track_x[iTrack],event.track_y[iTrack],event.track_z[iTrack])
+			print "recHit (%f,%f,%f)" %(event.recHits_uncal_x[iuncalRecHit],event.recHits_uncal_y[iuncalRecHit],event.recHits_uncal_z[iuncalRecHit])
+			print "time travelled: %f	time to left: %f	time to right: %f" %(t_travelled,event.recHits_uncal_time1[iuncalRecHit],event.recHits_uncal_time2[iuncalRecHit])
 			#histos["BTLrecHits_t_travel_track_t0"].Fill(event.track_t[iTrack],t_travel)
 			histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
         		histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled))
         		histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travelled,event.recHits_uncal_time1[iuncalRecHit]-t_travelled)
         		histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
-
+			histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
+        		histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travelled))
 			recHitMatched = True
 			break
 	if(not (recHitMatched == True)):
@@ -294,8 +298,8 @@ for ievent,event in enumerate(dh):
 	#angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
 	#distance_travelled = radius_of_BTL/M.cos(angle)
 	#t_travel = distance_travelled/c
-	histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
-        #histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travel))
+	#histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
+        #histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travelled))
         #histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
         #histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel))
 	#histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travel,event.recHits_uncal_time1[iuncalRecHit]-t_travel)

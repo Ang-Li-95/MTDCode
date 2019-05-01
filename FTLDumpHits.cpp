@@ -111,15 +111,15 @@ private:
   //***************************** uncalibrated *********************************    
 	
 	 
-  edm::Handle<FTLClusterCollection> clustersBTLHandle_;
-  edm::EDGetTokenT<FTLClusterCollection> clustersBTLToken_;
+  //edm::Handle<FTLClusterCollection> clustersBTLHandle_;
+  //edm::EDGetTokenT<FTLClusterCollection> clustersBTLToken_;
   
   edm::Handle<std::vector<PSimHit> > simHitsETLHandle_;
   edm::EDGetTokenT<std::vector<PSimHit> > simHitsETLToken_;
   edm::Handle<FTLRecHitCollection> recHitsETLHandle_;
   edm::EDGetTokenT<FTLRecHitCollection> recHitsETLToken_;    
-  edm::Handle<FTLClusterCollection> clustersETLHandle_;
-  edm::EDGetTokenT<FTLClusterCollection> clustersETLToken_;    
+  //edm::Handle<FTLClusterCollection> clustersETLHandle_;
+  //edm::EDGetTokenT<FTLClusterCollection> clustersETLToken_;    
 
   edm::EDGetTokenT<edm::View<reco::Track> > tracksToken_;
   edm::Handle<edm::View<reco::Track> > tracksHandle_;
@@ -141,17 +141,15 @@ private:
   
 };
 
-
-
+//clustersBTLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersBTLTag"))),
+//clustersETLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersETLTag"))),
 FTLDumpHits::FTLDumpHits(const edm::ParameterSet& pSet):
   genParticlesToken_(consumes<reco::GenParticleCollection>(pSet.getUntrackedParameter<edm::InputTag>("genParticlesTag"))),
   simHitsBTLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsBTLTag"))),
   recHitsBTLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsBTLTag"))),
   recHitsBTLToken_uncal_(consumes<FTLUncalibratedRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("uncal_recHitsBTLTag"))),  
-  clustersBTLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersBTLTag"))),
   simHitsETLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsETLTag"))),
   recHitsETLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsETLTag"))),
-  clustersETLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersETLTag"))),
   tracksToken_(consumes<edm::View<reco::Track> >(pSet.getUntrackedParameter<edm::InputTag>("tracksTag"))),
   genVtxToken_(consumes<vector<SimVertex> >(pSet.getUntrackedParameter<edm::InputTag>("genVtxTag"))),
   crysLayout_((BTLDetId::CrysLayout)(pSet.getUntrackedParameter<int>("crysLayout"))),
@@ -208,11 +206,11 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   //***************************** uncalibrated *********************************    
 
 
-  event.getByToken(clustersBTLToken_, clustersBTLHandle_);
+  //event.getByToken(clustersBTLToken_, clustersBTLHandle_);
 
   // auto clusters = FTLClusterCollection();
   // if(clustersBTLHandle_.isValid())
-  auto clustersBTL = *clustersBTLHandle_.product();
+  //auto clustersBTL = *clustersBTLHandle_.product();
 
   //---load sim hits
   event.getByToken(simHitsETLToken_, simHitsETLHandle_);
@@ -223,10 +221,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   auto recHitsETL = FTLRecHitCollection();
   if(recHitsETLHandle_.isValid())
     recHitsETL = *recHitsETLHandle_.product();
-  event.getByToken(clustersETLToken_, clustersETLHandle_);
+  //event.getByToken(clustersETLToken_, clustersETLHandle_);
   // auto clusters = FTLClusterCollection();
   // if(clustersETLHandle_.isValid())
-  auto clustersETL = *clustersETLHandle_.product();
+  //auto clustersETL = *clustersETLHandle_.product();
 
   //---load tracks
   event.getByToken(tracksToken_,tracksHandle_);
@@ -444,7 +442,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 
 
     
-
+/*
   //---fill the tree - BTL clusters
   outTree_.clusters_n = 0;
   
@@ -523,7 +521,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.clusters_global_R->push_back(sqrt(gp.perp2()));
 	}
     }
-
+*/
   if (dumpSimHits_)
     {
       for(auto simHit : simHitsETL)
@@ -628,7 +626,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.recHits_global_R->push_back(sqrt(gp.perp2()));
 	}
     }
-
+/*
   //---fill the tree - ETL cluters  
   for (auto clusIt : clustersETL)
     {    
@@ -706,7 +704,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.clusters_global_R->push_back(sqrt(gp.perp2()));
 	}
     }
-
+*/
   //--- fill the tree - tracks
   int idx=0;
   for(unsigned iTrack = 0; iTrack < tracks.size(); ++iTrack)
@@ -1146,7 +1144,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		++recHitIt;
 	      }
 	  }  
-	//---find associated recHits
+/*	//---find associated recHits
 	int clusterIt = 0;
 
 	for (auto clusIt : clustersBTL)
@@ -1249,7 +1247,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		++clusterIt;
 	      }
 	  }
-  
+  */
   
 	if( verbosity_ ) std::cout << "---\n\n\n" << std::endl;
 
@@ -1474,7 +1472,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		++recHitIt;
 	      }
 	  }  
-	//---find associated recHits
+/*	//---find associated recHits
 	int clusterIt = 0;
 
 	for (auto clusIt : clustersETL)
@@ -1575,7 +1573,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		++clusterIt;
 	      }
 	  }
-  
+  */
   
 	if( verbosity_ ) std::cout << "---\n\n\n" << std::endl;
 	if (dumpRecHits_)
