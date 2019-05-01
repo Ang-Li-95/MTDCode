@@ -7,7 +7,7 @@ import os
 
 def goodTrack(evt, itrack , chi2cut, skipMCmatching):
     #acceptance cuts
-    if (evt.track_pt[itrack]<0.7):
+    if (evt.track_pt[itrack]<6.0):
         return False
     if (abs(evt.track_eta[itrack])>3.):
         return False
@@ -245,7 +245,9 @@ for ievent,event in enumerate(dh):
                         continue
                 if(not event.track_eta_atBTL[iTrack]>-100.):
                         continue
-                deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_eta[nRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_phi[nRecHit],2))
+                if(event.track_velocity[iTrack]==0):
+                        continue
+		deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_eta[nRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_phi[nRecHit],2))
                 if(deltaR<0.05):
                         recHitMatched = True
                         break
@@ -259,12 +261,18 @@ for ievent,event in enumerate(dh):
 
     for iuncalRecHit in range(0,len(event.recHits_uncal_time1)):
 	recHitMatched = False
+	calibrateMatched = False
 	#calculate the time it takes for the track to reach BTL
         #assuming the speed is c and no curved track because of high energy
         angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
         distance_travelled = 100.0*radius_of_BTL/M.cos(angle)
         #t_travel = distance_travelled/c
-
+	for nhit in range(0,event.recHits_n):
+		if((event.recHits_uncal_eta[iuncalRecHit]==event.recHits_eta[nhit]) and (event.recHits_uncal_phi[iuncalRecHit]==event.recHits_phi[nhit])):
+			calibrateMatched = True
+			break
+	if(not calibrateMatched):
+		continue
 	for iTrack in range(0,len(event.track_idx)):
 		isNuGun_uncal = True if args.inputDir.find("NuGun")>0 else False
 		if(not goodTrack(event,iTrack,args.chi2cut,isNuGun_uncal)):

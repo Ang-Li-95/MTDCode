@@ -1,8 +1,8 @@
 void Draw_time()
 {
     gStyle->SetOptStat(0);
-    TString input_singlemu="singlemu_D35_relVal_MTD_0431_1.root";
-    TString input_singlepi="singlemu_D35_relVal_MTD_0431_all_pT.root";
+    TString input_singlemu="singlemu_D35_relVal_MTD_0431_6GeV_pT_match.root";
+    TString input_singlepi="singlemu_D35_relVal_MTD_0431_all_pT_match.root";
     //TString input_minimumbias="nuGun200PU_v1_test.root";
 
 
@@ -34,7 +34,7 @@ void Draw_time()
     h_singlepi_BTL->SetLineColor(kRed);
     h_singlemu_BTL->Scale(1./h_singlemu_BTL->GetEntries());
     h_singlepi_BTL->Scale(1./h_singlepi_BTL->GetEntries());
-    h_singlemu_BTL->SetTitle("distance to left;distance[m];# events");
+    h_singlemu_BTL->SetTitle("distance to left;distance[m];fraction of events");
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_BTL->Draw("hist");
@@ -57,7 +57,7 @@ void Draw_time()
     h_singlepi_ETL->SetLineColor(kRed);
     h_singlemu_ETL->Scale(1./h_singlemu_ETL->GetEntries());
     h_singlepi_ETL->Scale(1./h_singlepi_ETL->GetEntries());
-    h_singlemu_ETL->SetTitle("distance to right;distance[m];# events");
+    h_singlemu_ETL->SetTitle("distance to right;distance[m];fraction of events");
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_ETL->Draw("hist");
@@ -80,7 +80,7 @@ void Draw_time()
     h_singlepi_eff_ETL->SetLineColor(kRed);
     h_singlemu_eff_ETL->Scale(1./h_singlemu_eff_ETL->GetEntries());
     h_singlepi_eff_ETL->Scale(1./h_singlepi_eff_ETL->GetEntries());
-    h_singlemu_eff_ETL->SetTitle("total distance;distance[m];# events");
+    h_singlemu_eff_ETL->SetTitle("total distance;distance[m];fraction of events");
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_eff_ETL->Draw("hist");
@@ -102,7 +102,7 @@ void Draw_time()
     h_singlepi_eff_BTL->SetLineColor(kRed);
     h_singlemu_eff_BTL->Scale(1./h_singlemu_eff_BTL->GetEntries());
     h_singlepi_eff_BTL->Scale(1./h_singlepi_eff_BTL->GetEntries());
-    h_singlemu_eff_BTL->SetTitle("distance difference;distance[m];# events");
+    h_singlemu_eff_BTL->SetTitle("distance difference;distance[m];fraction of events");
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_eff_BTL->Draw("hist");
@@ -122,11 +122,16 @@ void Draw_time()
     TCanvas *c5 = new TCanvas("c5","c5");
     c5->cd();
     h1->SetTitle("BTL recHits D35(track_pT>6GeV);x2[m];x1[m]");
-    h1->Draw();
+    h1->GetXaxis()->SetRangeUser(-0.2,0.2);
+    h1->GetYaxis()->SetRangeUser(-0.2,0.2);
+
+    h1->Draw("colz");
 
     TCanvas *c6 = new TCanvas("c6","c6");
     c6->cd();
     h2->SetTitle("BTL recHits D35(all good tracks);x2[m];x1[m]");
-    h2->Draw();
+    h2->GetXaxis()->SetRangeUser(-0.2,0.2);
+    h2->GetYaxis()->SetRangeUser(-0.2,0.2);
+    h2->Draw("colz");
 
 }
