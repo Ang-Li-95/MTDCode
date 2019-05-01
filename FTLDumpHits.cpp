@@ -123,6 +123,8 @@ private:
 
   edm::EDGetTokenT<edm::View<reco::Track> > tracksToken_;
   edm::Handle<edm::View<reco::Track> > tracksHandle_;
+  edm::EDGetTokenT<edm::ValueMap<float> > tracksLengthToken_;
+  edm::Handle<edm::ValueMap<float> > tracksLengthHandle_;
   edm::EDGetTokenT<vector<SimVertex> >                 genVtxToken_;
   edm::Handle<vector<SimVertex> >                      genVtxHandle_;    
   edm::ESHandle<TransientTrackBuilder> builder;
@@ -151,6 +153,7 @@ FTLDumpHits::FTLDumpHits(const edm::ParameterSet& pSet):
   simHitsETLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsETLTag"))),
   recHitsETLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsETLTag"))),
   tracksToken_(consumes<edm::View<reco::Track> >(pSet.getUntrackedParameter<edm::InputTag>("tracksTag"))),
+  tracksLengthToken_(consumes<edm::ValueMap<float> >(pSet.getUntrackedParameter<edm::InputTag>("tracksLengthTag"))),
   genVtxToken_(consumes<vector<SimVertex> >(pSet.getUntrackedParameter<edm::InputTag>("genVtxTag"))),
   crysLayout_((BTLDetId::CrysLayout)(pSet.getUntrackedParameter<int>("crysLayout"))),
   track_hit_DRMax_(pSet.getParameter<double>("track_hit_DRMax")),
@@ -229,6 +232,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   //---load tracks
   event.getByToken(tracksToken_,tracksHandle_);
   auto tracks = *tracksHandle_.product();
+  event.getByToken(tracksLengthToken_,tracksLengthHandle_);
 
   event.getByToken(genVtxToken_, genVtxHandle_);    
   const SimVertex* genPV = NULL;
@@ -714,7 +718,9 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       if( track.charge() == 0 ) continue;
       //    if( fabs(track.eta()) > 1.5 ) continue;
       if( track.pt() < 0.7 ) continue;
-    
+      edm::Ptr< reco::Track > ptr( tracksHandle_, iTrack);
+      double trackLength = (*tracksLengthHandle_)[ptr];
+
       // match with gen particles
       float DRMin = 999999;
       int genPdgId = 0;
@@ -764,6 +770,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_y -> push_back(track.vy());
       outTree_.track_z -> push_back(track.vz());
       outTree_.track_t -> push_back(track.t0());
+      outTree_.track_length -> push_back(trackLength);
       outTree_.track_velocity -> push_back(track.beta());
       outTree_.track_energy -> push_back(sqrt(track.momentum().mag2()));
       outTree_.track_normalizedChi2 -> push_back(track.normalizedChi2());

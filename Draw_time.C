@@ -1,8 +1,8 @@
 void Draw_time()
 {
     gStyle->SetOptStat(0);
-    TString input_singlemu="singlemu_D35_relVal_MTD_0431_6GeV_pT_match.root";
-    TString input_singlepi="singlemu_D35_relVal_MTD_0431_all_pT_match.root";
+    TString input_singlemu="singlemu_D35_relVal_MTD_0431_6GeV_pT_match_2.root";
+    TString input_singlepi="singlemu_D35_relVal_MTD_0431_6GeV_pT_match_2.root";
     //TString input_minimumbias="nuGun200PU_v1_test.root";
 
 
@@ -38,7 +38,7 @@ void Draw_time()
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_BTL->Draw("hist");
-    h_singlepi_BTL->Draw("hist same");
+    //h_singlepi_BTL->Draw("hist same");
    
 
 
@@ -48,7 +48,7 @@ void Draw_time()
     leg->AddEntry(h_singlepi_BTL,"all good tracks");
     //leg->AddEntry(h_minimumbias_ETL,"minbias,   #LTE#GT = MeV");
 
-    leg->Draw();
+    //leg->Draw();
 
 
     TCanvas *c2 = new TCanvas("c2","c2");
@@ -61,7 +61,7 @@ void Draw_time()
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_ETL->Draw("hist");
-    h_singlepi_ETL->Draw("hist same");
+    //h_singlepi_ETL->Draw("hist same");
    
 
 
@@ -71,7 +71,7 @@ void Draw_time()
     leg2->AddEntry(h_singlepi_ETL,"all good tracks");
     //leg->AddEntry(h_minimumbias_ETL,"minbias,   #LTE#GT = MeV");
 
-    leg2->Draw();
+    //leg2->Draw();
 
 
     TCanvas *c3 = new TCanvas("c3","c3");
@@ -84,7 +84,7 @@ void Draw_time()
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_eff_ETL->Draw("hist");
-    h_singlepi_eff_ETL->Draw("hist same");
+    //h_singlepi_eff_ETL->Draw("hist same");
    
 
 
@@ -94,7 +94,7 @@ void Draw_time()
     leg3->AddEntry(h_singlepi_eff_ETL,"all good tracks");
     //leg->AddEntry(h_minimumbias_ETL,"minbias,   #LTE#GT = MeV");
 
-    leg3->Draw();
+    //leg3->Draw();
 
     TCanvas *c4 = new TCanvas("c4","c4");
     c4->cd();
@@ -106,7 +106,7 @@ void Draw_time()
     //h_singlemu_ETL->SetLineWidth(3);
     //h_singlepi_ETL->SetLineWidth(3);   
     h_singlemu_eff_BTL->Draw("hist");
-    h_singlepi_eff_BTL->Draw("hist same");
+    //h_singlepi_eff_BTL->Draw("hist same");
    
 
 
@@ -116,7 +116,7 @@ void Draw_time()
     leg4->AddEntry(h_singlepi_ETL,"all good tracks");
     //leg->AddEntry(h_minimumbias_ETL,"minbias,   #LTE#GT = MeV");
 
-    leg4->Draw();
+    //leg4->Draw();
 
 
     TCanvas *c5 = new TCanvas("c5","c5");
@@ -125,7 +125,7 @@ void Draw_time()
     h1->GetXaxis()->SetRangeUser(-0.2,0.2);
     h1->GetYaxis()->SetRangeUser(-0.2,0.2);
 
-    h1->Draw("colz");
+    //h1->Draw("colz");
 
     TCanvas *c6 = new TCanvas("c6","c6");
     c6->cd();

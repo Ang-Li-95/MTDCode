@@ -29,6 +29,7 @@ using namespace std;
   DATA(vector<float>, track_y)                                          \
   DATA(vector<float>, track_z)                                          \
   DATA(vector<float>, track_t)                                          \
+  DATA(vector<float>, track_length)                                          \
   DATA(vector<float>, track_velocity)                                          \
   DATA(vector<float>, track_energy)                                     \
   DATA(vector<float>, track_normalizedChi2)                             \
