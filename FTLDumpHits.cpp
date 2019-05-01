@@ -339,7 +339,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		  MeasurementPoint mp_uncal(recHit_uncal_.row(),recHit_uncal_.column());
 	          LocalPoint lp_uncal = topo_uncal.localPosition(mp_uncal);
         	  GlobalPoint gp_uncal = det_uncal->toGlobal(lp_uncal);
-        	  float eta_uncal = gp_uncal.eta();
+		  float eta_uncal = gp_uncal.eta();
         	  float phi_uncal = gp_uncal.phi();
         	  outTree_.recHits_eta_uncalibrated->push_back(eta_uncal);
         	  outTree_.recHits_phi_uncalibrated->push_back(phi_uncal);
@@ -351,11 +351,11 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 
 	  if(!match_success)
 	  {
-		  std::cout << "nothing matched" << std::endl;
+		  //std::cout << "nothing matched" << std::endl;
 		  outTree_.recHits_matched_with_uncalibrated->push_back(0.0);
 	  }
 	  match_success = false;
-	  std::cout << "match_success: " << match_success << std::endl;
+	  //std::cout << "match_success: " << match_success << std::endl;
 	  outTree_.recHits_n += 1;
 	    
 	  outTree_.recHits_det->push_back(1);
@@ -398,9 +398,14 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  GlobalPoint gp = det->toGlobal(lp);
     	  float eta = gp.eta();
           float phi = gp.phi();
+	  float x = gp.x();
+          float y = gp.y();
+          float z = gp.z();
 	  outTree_.recHits_uncal_eta->push_back(eta);
           outTree_.recHits_uncal_phi->push_back(phi);
-
+	  outTree_.recHits_uncal_x->push_back(x);
+	  outTree_.recHits_uncal_y->push_back(y);
+	  outTree_.recHits_uncal_z->push_back(z);
 
 	  /*int RR = id.mtdRR();
 	  int side = id.mtdSide();
@@ -761,6 +766,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_y -> push_back(track.vy());
       outTree_.track_z -> push_back(track.vz());
       outTree_.track_t -> push_back(track.t0());
+      outTree_.track_velocity -> push_back(track.beta());
       outTree_.track_energy -> push_back(sqrt(track.momentum().mag2()));
       outTree_.track_normalizedChi2 -> push_back(track.normalizedChi2());
       outTree_.track_numberOfValidHits -> push_back(track.numberOfValidHits());

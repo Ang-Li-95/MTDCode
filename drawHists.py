@@ -7,7 +7,7 @@ import os
 
 def goodTrack(evt, itrack , chi2cut, skipMCmatching):
     #acceptance cuts
-    if (evt.track_pt[itrack]<0.7):
+    if (evt.track_pt[itrack]<3.0):
         return False
     if (abs(evt.track_eta[itrack])>3.):
         return False
@@ -141,6 +141,7 @@ histos["BTLrecHits_length_2"]=R.TH1F("BTLrecHits_length_2","BTLrecHits_length_2"
 histos["BTLrecHits_t1_travel_vs_t2_travel"]=R.TH2F("BTLrecHits_t1_travel_vs_t2_travel","BTLrecHits_t1_travel_vs_t2_travel",50,-2.,3.,50,-2.,3.)
 histos["BTLrecHits_x1_vs_x2"]=R.TH2F("BTLrecHits_x1_vs_x2","BTLrecHits_x1_vs_x2",50,-0.5,0.5,50,-0.5,0.5)
 histos["BTLrecHits_average_time"]=R.TH2F("BTLrecHits_average_time","BTLrecHits_average_time",300,0,60,300,0,60)
+histos["BTLrecHits_t_travel_track_t0"]=R.TH2F("BTLrecHits_t_travel_track_t0","BTLrecHits_t_travel_track_t0",50,0,10,50,0,10)
 
 histos["h_ETL_ring"]=R.TH1F("h_ETL_ring","h_ETL_ring",50,0,50)
 histos["h_ETL_recHits_energy"]=R.TH1F("h_ETL_recHits_energy","h_ETL_recHits_energy",1000,0.,10)
@@ -258,29 +259,47 @@ for ievent,event in enumerate(dh):
 
     for iuncalRecHit in range(0,len(event.recHits_uncal_time1)):
 	recHitMatched = False
+	#calculate the time it takes for the track to reach BTL
+        #assuming the speed is c and no curved track because of high energy
+        angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
+        distance_travelled = 100.0*radius_of_BTL/M.cos(angle)
+        #t_travel = distance_travelled/c
+
 	for iTrack in range(0,len(event.track_idx)):
 		isNuGun_uncal = True if args.inputDir.find("NuGun")>0 else False
 		if(not goodTrack(event,iTrack,args.chi2cut,isNuGun_uncal)):
 			continue
 		if(not event.track_eta_atBTL[iTrack]>-100.):
 			continue
+		if(event.track_velocity[iTrack]==0):
+			continue
 		deltaR = M.sqrt(pow((event.track_eta_atBTL[iTrack]-event.recHits_uncal_eta[iuncalRecHit]),2)+pow(event.track_phi_atBTL[iTrack]-event.recHits_uncal_phi[iuncalRecHit],2))   
-		if(deltaR<0.05):
+		if(deltaR<0.01):
+			distance_ref_to_recHit = M.sqrt((event.recHits_uncal_x[iuncalRecHit]-event.track_x[iTrack])*(event.recHits_uncal_x[iuncalRecHit]-event.track_x[iTrack])+(event.recHits_uncal_y[iuncalRecHit]-event.track_y[iTrack])*(event.recHits_uncal_y[iuncalRecHit]-event.track_y[iTrack])+(event.recHits_uncal_z[iuncalRecHit]-event.track_z[iTrack])*(event.recHits_uncal_z[iuncalRecHit]-event.track_z[iTrack]))
+			t_travelled = distance_ref_to_recHit*0.01/(event.track_velocity[iTrack]*c)-event.track_t[iTrack]
+			print "Before: %f cm" %distance_travelled
+			print "After: %f cm" %distance_ref_to_recHit
+			#histos["BTLrecHits_t_travel_track_t0"].Fill(event.track_t[iTrack],t_travel)
+			histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
+        		histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled))
+        		histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travelled,event.recHits_uncal_time1[iuncalRecHit]-t_travelled)
+        		histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
+
 			recHitMatched = True
 			break
 	if(not (recHitMatched == True)):
 		continue
 	#calculate the time it takes for the track to reach BTL
 	#assuming the speed is c and no curved track because of high energy
-	angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
-	distance_travelled = radius_of_BTL/M.cos(angle)
-	t_travel = distance_travelled/c
+	#angle = M.pi/2.0-2.0*M.atan(M.exp(-event.recHits_uncal_eta[iuncalRecHit]))
+	#distance_travelled = radius_of_BTL/M.cos(angle)
+	#t_travel = distance_travelled/c
 	histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
-        histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travel))
-        histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
-        histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel))
-	histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travel,event.recHits_uncal_time1[iuncalRecHit]-t_travel)
-	histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
+        #histos["BTLrecHits_total_length"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travel))
+        #histos["BTLrecHits_length_1"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
+        #histos["BTLrecHits_length_2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel))
+	#histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travel,event.recHits_uncal_time1[iuncalRecHit]-t_travel)
+	#histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travel),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travel))
 
 
     for itrack in range(0,len(event.track_idx)):
